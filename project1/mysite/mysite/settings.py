@@ -22,9 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #FLAW 4: Security Misconfiguration
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'notasecretkey'
+#Fixed code:
+#SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#Fixed code:
+#DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = []
 
