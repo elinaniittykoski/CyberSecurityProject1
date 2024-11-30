@@ -15,6 +15,8 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         #FLAW 3: Broken Access Control
         return Question.objects.all().order_by('-pub_date')[:5]
+        #Fixed code:
+        #return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
 class DetailView(generic.DetailView):
     model = Question
@@ -23,7 +25,8 @@ class DetailView(generic.DetailView):
     def get_queryset(self):
         #FLAW 3: Broken Access Contol
         return Question.objects.all()
-
+        #Fixed code:
+        #return Question.objects.filter(pub_date__lte=timezone.now()) 
 
 class ResultsView(generic.DetailView):
     model = Question
@@ -45,3 +48,21 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })       
 
+#Fixed code:
+#def vote(request, question_id): 
+#    question = get_object_or_404(Question, pk=question_id) 
+#    try: 
+#        choice_id = request.POST['choice'] 
+#         
+#        # Use Django ORM to safely update the vote count 
+#        selected_choice = question.choice_set.get(pk=choice_id) 
+#        selected_choice.votes += 1 
+#        selected_choice.save() 
+#         
+#        return HttpResponseRedirect(reverse('polls:results', args=(question.id,))) 
+#     
+#    except (KeyError, Choice.DoesNotExist): 
+#        return render(request, 'polls/detail.html', { 
+#            'question': question, 
+#            'error_message': "You didn't select a choice.", 
+#        }) 
